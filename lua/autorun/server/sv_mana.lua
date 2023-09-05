@@ -25,15 +25,22 @@ local weaponManaCost = {
 -- Initialize mana for players when they spawn
 hook.Add("PlayerInitialSpawn", "InitializePlayerMana", function(ply)
     local job = ply:Team()
-    local jobMana = jobMaxMana[job]
-    if jobMana then
-        ply:SetNWInt("PlayerMana", jobMana)
-        ply:SetNWInt("MaxPlayerMana", jobMana)
+
+    -- Check if jobMaxMana exists and the job index exists in jobMaxMana
+    if jobMaxMana and jobMaxMana[job] then
+        ply:SetNWInt("PlayerMana", jobMaxMana[job])
+        ply:SetNWInt("MaxPlayerMana", jobMaxMana[job])
     else
         ply:SetNWInt("PlayerMana", defaultMaxMana)
         ply:SetNWInt("MaxPlayerMana", defaultMaxMana)
     end
-    ply:SetNWInt("ManaRegenRate", jobRegenRate[job] or defaultRegenRate)
+    
+    -- Check if jobRegenRate exists before accessing its index
+    if jobRegenRate and jobRegenRate[job] then
+        ply:SetNWInt("ManaRegenRate", jobRegenRate[job])
+    else
+        ply:SetNWInt("ManaRegenRate", defaultRegenRate)
+    end
     
 end)
 
