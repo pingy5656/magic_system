@@ -6,7 +6,7 @@ local defaultRegenRate = 1  -- Amount of mana regenerated per second
 
 -- Custom values for specific jobs
 local jobMaxMana = {
-    [TEAM_KNIGHT] = 150,
+    [TEAM_DRUID] = 150,
     [TEAM_MAGE] = 200,
     -- ... Add other jobs as needed
 }
@@ -17,17 +17,24 @@ local jobRegenRate = {
 }
 
 local weaponManaCost = {
-    ["weapon_fireball"] = 10,
-    ["weapon_lightning"] = 20,
+    ["gb_plasmid_telekinesis"] = 10,
+    ["gb_plasmid_explosion"] = 20,
     -- ... Add other weapons and their mana costs
 }
 
 -- Initialize mana for players when they spawn
 hook.Add("PlayerInitialSpawn", "InitializePlayerMana", function(ply)
     local job = ply:Team()
-    ply:SetNWInt("PlayerMana", jobMaxMana[job] or defaultMaxMana)
-    ply:SetNWInt("MaxPlayerMana", jobMaxMana[job] or defaultMaxMana)
+    local jobMana = jobMaxMana[job]
+    if jobMana then
+        ply:SetNWInt("PlayerMana", jobMana)
+        ply:SetNWInt("MaxPlayerMana", jobMana)
+    else
+        ply:SetNWInt("PlayerMana", defaultMaxMana)
+        ply:SetNWInt("MaxPlayerMana", defaultMaxMana)
+    end
     ply:SetNWInt("ManaRegenRate", jobRegenRate[job] or defaultRegenRate)
+    
 end)
 
 -- Mana regeneration over time
